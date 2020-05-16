@@ -1,39 +1,38 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        sticky-notes
-      </h1>
-      <h2 class="subtitle">
-        sticky notes pwa
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+      <div>
+       <form class="form-inline" v-on:submit.prevent="onSubmit">
+  <label for="title">Title:</label>
+  <input type="title" id="title" placeholder="Enter title" name="title" v-model="title">
+  <label for="description">Description:</label>
+  <input type="description" id="description" placeholder="Description" name="description" v-model="description">
+
+  <button type="submit">Submit</button>
+</form> 
+{{notes}}
+
+  </div>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
+import { mapState, mapMutations } from 'vuex'
 export default {
-  components: {
-    Logo
+  data(){
+    return {
+      title : '',
+      description: ''
+    }
+  },
+  computed: {
+    ...mapState(['notes'])
+  },
+  methods: {
+    onSubmit(){
+      let {title, description} = this.$data;
+      this.$store.commit('addNote', {title,description})
+
+    }
   }
 }
 </script>
@@ -69,4 +68,48 @@ export default {
 .links {
   padding-top: 15px;
 }
+ /* Style the form - display items horizontally */
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the input fields */
+.form-inline input {
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Style the submit button */
+.form-inline button {
+  padding: 10px 20px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+}
+
+.form-inline button:hover {
+  background-color: royalblue;
+}
+
+/* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
+@media (max-width: 800px) {
+  .form-inline input {
+    margin: 10px 0;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+} 
 </style>
